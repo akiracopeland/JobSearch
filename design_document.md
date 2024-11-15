@@ -1,4 +1,4 @@
-# Job Hunt Design Document
+# JobSearch Design Document
 
 ## Instructions
 
@@ -21,7 +21,7 @@ People have difficult time staying organized during job hunting.
 Keeping track of which companies you have applied, the status of your applications,
 which intern/apprenticeship positions are currently open, etc. 
 This application is aimed to help people stay organized in their job searching
-by providing a central repository for logging the job hunt progress, 
+by providing a central repository for logging the job search progress. 
 
 
 
@@ -30,9 +30,9 @@ by providing a central repository for logging the job hunt progress,
 *List the most important questions you have about your design, or things that
 you are still debating internally that you might like help working through.*
 
-1.   
+1.   How the frontend should interact with the API endpoints.
 2.   
-3.  
+3.   
 
 ## 3. Use Cases
 
@@ -40,45 +40,29 @@ you are still debating internally that you might like help working through.*
 would like to do (and why). You may also include use cases for yourselves, or
 for the organization providing the product to customers.*
 
-U1. *As a [product] customer, I want to `<result>` when I `<action>`*
+U1. As a JobSearch customer, I want to create new Job applications and set its status/make notes. 
 
-U2. *As a [product] customer, I want to view my grocery list when I log into the
-grocery list page*
+U2. As a JobSearch customer, I want to update my existing Job application items when the status changes.
     
-U3. ...
+U3. As a JobSearch customer, I want to delete my Job applications.
 
 ## 4. Project Scope
 
-*Clarify which parts of the problem you intend to solve. It helps reviewers know
-what questions to ask to make sure you are solving for what you say and stops
-discussions from getting sidetracked by aspects you do not intend to handle in
-your design.*
-
 ### 4.1. In Scope
 
-*Which parts of the problem defined in Sections 1 and 3 will you solve with this
-design?*
+For this MVP, CRUD operations on the Job Application will be in scope for sure.
 
 ### 4.2. Out of Scope
 
-*Based on your problem description in Sections 1 and 3, are there any aspects
-you are not planning to solve? Do potential expansions or related problems occur
-to you that you want to explicitly say you are not worrying about now? Feel free
-to put anything here that you think your team can't accomplish in the unit, but
-would love to do with more time.*
+Web scraping and getting the recommended jobs from various job sites, displaying them
+in another page for the customer.
 
 # 5. Proposed Architecture Overview
 
-*Describe broadly how you are proposing to solve for the requirements you
-described in Section 3.*
-
-*This may include class diagram(s) showing what components you are planning to
-build.*
-
-*You should argue why this architecture (organization of components) is
-reasonable. That is, why it represents a good data flow and a good separation of
-concerns. Where applicable, argue why this architecture satisfies the stated
-requirements.*
+Dynamo DB Table JobApplication that holds all the Job Application items.
+AWS Lambda functions that handle API calls.
+API Gateway to expose the endpoints.
+Frontend that calls the endpoints when CRUD operation is done.
 
 # 6. API
 

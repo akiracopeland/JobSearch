@@ -59,52 +59,73 @@ in another page for the customer.
 
 # 5. Proposed Architecture Overview
 
-Dynamo DB Table JobApplication that holds all the Job Application items.
-AWS Lambda functions that handle API calls.
-API Gateway to expose the endpoints.
-Frontend that calls the endpoints when CRUD operation is done.
+| Aspect                      | Description                                                                                                    |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------|
+| **Modular Backend**         | Using Lambda functions and DynamoDB, you can add new functions (like scraping and filtering) without affecting the existing structure. |
+| **Scalable Data Storage**   | DynamoDB can handle additional tables or entries for new data, allowing separation between user applications and scraped job listings. |
+| **API Gateway**             | API Gateway lets you easily add new endpoints (e.g., `/job-listings`), allowing seamless integration with your frontend. |
+| **Frontend Flexibility**    | You can add new pages or sections to display the scraped job listings, and personalize results using JavaScript/HTML or a framework. |
+| **Scheduled Jobs**          | AWS Lambda supports scheduled triggers via Amazon EventBridge, so you can run scraping functions periodically to keep listings updated. |
+| **ML and Personalization**  | You can integrate AWS services like Amazon Comprehend or Amazon Personalize to analyze job listings and suggest relevant ones to users. |
+
 
 # 6. API
 
-## 6.1. Public Models
+- **Endpoint**: `POST /applications`
+- **Description**: Adds a new job application for the user.
+- **Request Body**:
+  ```json
+  {
+    "userId": "user123",
+    "companyName": "TechCorp",
+    "jobTitle": "Software Engineer",
+    "dateApplied": "2023-11-12",
+    "notes": "Follow-up next week",
+    "status": "Applied"
+  }
 
-*Define the data models your service will expose in its responses via your
-*`-Model`* package. These will be equivalent to the *`PlaylistModel`* and
-*`SongModel`* from the Unit 3 project.*
 
-## 6.2. *First Endpoint*
-
-*Describe the behavior of the first endpoint you will build into your service
-API. This should include what data it requires, what data it returns, and how it
-will handle any known failure cases. You should also include a sequence diagram
-showing how a user interaction goes from user to website to service to database,
-and back. This first endpoint can serve as a template for subsequent endpoints.
-(If there is a significant difference on a subsequent endpoint, review that with
-your team before building it!)*
-
-*(You should have a separate section for each of the endpoints you are expecting
-to build...)*
-
-## 6.3 *Second Endpoint*
-
-*(repeat, but you can use shorthand here, indicating what is different, likely
-primarily the data in/out and error conditions. If the sequence diagram is
-nearly identical, you can say in a few words how it is the same/different from
-the first endpoint)*
 
 # 7. Tables
 
-*Define the DynamoDB tables you will need for the data your service will use. It
-may be helpful to first think of what objects your service will need, then
-translate that to a table structure, like with the *`Playlist` POJO* versus the
-`playlists` table in the Unit 3 project.*
+# Job Application Table Schema
+
+| Attribute      | Type     | Description                                                                                   |
+|----------------|----------|-----------------------------------------------------------------------------------------------|
+| `UserId`       | String   | Unique identifier for each user. Acts as the partition key.                                   |
+| `ApplicationId`| String   | Unique identifier for each job application. Acts as the sort key.                             |
+| `CompanyName`  | String   | Name of the company where the user applied.                                                   |
+| `JobTitle`     | String   | Job title the user applied for.                                                               |
+| `DateApplied`  | String   | Date the application was submitted, stored in ISO format (`YYYY-MM-DD`) for easy sorting.     |
+| `Notes`        | String   | Additional notes about the application (e.g., follow-up notes, interview feedback).           |
+| `Status`       | String   | Current status of the application (e.g., "Applied", "Interviewing", "Offer", "Rejected").     |
+
+## Primary Key Design
+- **Partition Key**: `UserId` - Identifies the user.
+- **Sort Key**: `ApplicationId` - Uniquely identifies each job application for a specific user.
+
 
 # 8. Pages
 
-*Include mock-ups of the web pages you expect to build. These can be as
-sophisticated as mockups/wireframes using drawing software, or as simple as
-hand-drawn pictures that represent the key customer-facing components of the
-pages. It should be clear what the interactions will be on the page, especially
-where customers enter and submit data. You may want to accompany the mockups
-with some description of behaviors of the page (e.g. “When customer submits the
-submit-dog-photo button, the customer is sent to the doggie detail page”)*
+# JobSearch App
+
+### 📋 Job Applications
+
+#### New Application Form
+- **Company Name**: [Input Field]
+- **Job Title**: [Input Field]
+- **Date Applied**: [Date Picker]
+- **Notes**: [Textarea for notes on application status, interview feedback, etc.]
+- **[Submit Button]**
+
+---
+
+#### Your Applications
+A table or list displaying your current job applications, with options to edit or delete entries.
+
+| Company Name   | Job Title           | Date Applied | Status          | Actions          |
+|----------------|----------------------|--------------|-----------------|------------------|
+| TechCorp       | Software Engineer    | 2023-11-12   | Interviewing    | [Edit] [Delete]  |
+| Innovate Inc.  | Data Analyst         | 2023-10-05   | Applied         | [Edit] [Delete]  |
+
+---
